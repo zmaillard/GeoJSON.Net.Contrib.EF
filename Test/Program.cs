@@ -21,6 +21,17 @@ namespace GeoJSON.Net.Contrib.EF.Test
             Test("MULTIPOLYGON (((30 20, 45 40, 10 40, 30 20)),((15 5, 40 10, 10 20, 5 10, 15 5)))");
             Test("MULTIPOLYGON (((40 40, 20 45, 45 30, 40 40)),((20 35, 10 30, 10 10, 30 5, 45 20, 20 35),(30 20, 20 15, 20 25, 30 20)))");
             Test("GEOMETRYCOLLECTION(POINT(4 6),LINESTRING(4 6,7 10))");
+
+            TestGeometry("POINT (30 10)");
+            TestGeometry("LINESTRING (30 10, 10 30, 40 40)");
+            TestGeometry("POLYGON ((30 10, 40 40, 20 40, 10 20, 30 10))");
+            TestGeometry("POLYGON ((35 10, 45 45, 15 40, 10 20, 35 10),(20 30, 35 35, 30 20, 20 30))");
+            TestGeometry("MULTIPOINT ((10 40), (40 30), (20 20), (30 10))");
+            TestGeometry("MULTIPOINT (10 40, 40 30, 20 20, 30 10)");
+            TestGeometry("MULTILINESTRING ((10 10, 20 20, 10 40),(40 40, 30 30, 40 20, 30 10))");
+            TestGeometry("MULTIPOLYGON (((30 20, 45 40, 10 40, 30 20)),((15 5, 40 10, 10 20, 5 10, 15 5)))");
+            TestGeometry("MULTIPOLYGON (((40 40, 20 45, 45 30, 40 40)),((20 35, 10 30, 10 10, 30 5, 45 20, 20 35),(30 20, 20 15, 20 25, 30 20)))");
+            TestGeometry("GEOMETRYCOLLECTION(POINT(4 6),LINESTRING(4 6,7 10))");
         }
 
         static void Test(string p_wkt)
@@ -32,6 +43,24 @@ namespace GeoJSON.Net.Contrib.EF.Test
                 var v_geo2 = Utils.GeometryFromWkb(v_wkb1);
                 var v_wkb2 = Utils.GeometryToWkb(v_geo2);
                 var v_geo3 = DbGeography.FromBinary(v_wkb2);
+                var v_IsEqual = System.Data.Entity.Spatial.DbSpatialServices.Default.SpatialEquals(v_geo1, v_geo3);
+                Console.WriteLine("passed: " + p_wkt);
+            }
+            catch
+            {
+                Console.WriteLine("failed: " + p_wkt);
+            }
+        }
+
+        static void TestGeometry(string p_wkt)
+        {
+            try
+            {
+                var v_geo1 = DbGeometry.FromText(p_wkt);
+                var v_wkb1 = v_geo1.AsBinary();
+                var v_geo2 = Utils.GeometryFromWkb(v_wkb1);
+                var v_wkb2 = Utils.GeometryToWkb(v_geo2);
+                var v_geo3 = DbGeometry.FromBinary(v_wkb2);
                 var v_IsEqual = System.Data.Entity.Spatial.DbSpatialServices.Default.SpatialEquals(v_geo1, v_geo3);
                 Console.WriteLine("passed: " + p_wkt);
             }

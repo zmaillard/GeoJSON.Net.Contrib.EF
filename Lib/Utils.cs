@@ -19,6 +19,17 @@ namespace GeoJSON.Net.Contrib.EF
             return DbGeography.FromBinary(WkbEncode.Encode(p_Geometry));
         }
 
+        static public DbGeometry FeatureToDbGeometry(GeoJSON.Net.Feature.Feature p_Feature)
+        {
+            return GeometryToDbGeometry(p_Feature.Geometry);
+        }
+
+        static public DbGeometry GeometryToDbGeometry(GeoJSON.Net.Geometry.IGeometryObject p_Geometry)
+        {
+            return DbGeometry.FromBinary(WkbEncode.Encode(p_Geometry));
+        }
+
+
         static public byte[] GeometryToWkb(GeoJSON.Net.Geometry.IGeometryObject p_Geometry)
         {
             return WkbEncode.Encode(p_Geometry);
